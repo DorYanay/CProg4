@@ -178,7 +178,7 @@ void build_graph_cmd(pnode *head)
         scanf(" %c", &n);
         scanf("%d", &v);
         curr = findVertex(*head, v);
-        while ((letter = scanf("%d", &lv)))
+        while ((letter = scanf("%d", &lv)) && !feof(stdin))
         {
             nextv = findVertex(*head, lv);
             scanf("%d", &weight);
