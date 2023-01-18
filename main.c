@@ -17,9 +17,10 @@ int main()
             printf("A:\n");
             build_graph_cmd(&head);
             break;
-        // case 'B':
-        //     insert_node_cmd(&head);
-        //     break;
+        case 'B':
+            printf("B:\n");
+            insert_node_cmd(&head);
+            break;
         case 'D':
             delete_node_cmd(&head);
             break;

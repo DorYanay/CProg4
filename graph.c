@@ -60,6 +60,19 @@ void printGraph_cmd(pnode head)
         temp = temp->next;
     }
 }
+pnode new_Node(pnode *head, int v)
+{
+    pnode vertex = (pnode)malloc(sizeof(node));
+    if (!vertex)
+    {
+        return NULL;
+    }
+    vertex->node_num = v;
+    vertex->edges = NULL;
+    vertex->next = *head;
+    *head = vertex;
+    return vertex;
+}
 pnode findVertex(pnode head, int v)
 {
     while (head)
@@ -159,6 +172,44 @@ void delete_node_cmd(pnode *head)
     printf("D: \n");
     printGraph_cmd(*head);
 }
+void freeCurrentEdges(pnode v)
+{
+    pedge vedge = v->edges;
+    while (vedge)
+    {
+        pedge temp = vedge;
+        vedge = vedge->next;
+        free(temp);
+    }
+    v->edges = NULL;
+}
+void insert_node_cmd(pnode *head)
+{
+    int v = 0;
+    pnode nextvertex = NULL;
+    int lastv = 0;
+    int res = 0;
+    int weight = 0;
+    scanf("%d", &v);
+    pnode temp = findVertex(*head, v);
+    if (temp != NULL)
+    {
+        freeCurrentEdges(temp);
+    }
+    else
+    {
+        temp = new_Node(head, v);
+    }
+    // int res = scanf("%d", &nextvertex);
+    while ((res = scanf("%d", &lastv)) && !feof(stdin))
+    {
+        nextvertex = findVertex(*head, lastv);
+        scanf("%d", &weight);
+        add_Edge(temp, nextvertex, weight);
+    }
+    printGraph_cmd(*head);
+}
+// A
 void build_graph_cmd(pnode *head)
 {
     deleteGraph_cmd(head);
