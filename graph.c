@@ -105,6 +105,7 @@ void deleteGraph_cmd(pnode *head)
         free(timo);
     }
 }
+// D
 void delete_node_cmd(pnode *head)
 {
     int v = 0;
@@ -183,6 +184,7 @@ void freeCurrentEdges(pnode v)
     }
     v->edges = NULL;
 }
+// B
 void insert_node_cmd(pnode *head)
 {
     int v = 0;
