@@ -25,5 +25,7 @@ void printGraph_cmd(pnode head); // for self debug
 void deleteGraph_cmd(pnode *head);
 void shortsPath_cmd(pnode head);
 void TSP_cmd(pnode head);
-
+pnode findVertex(pnode head, int v);
+pnode newGraph(int Vnum);
+void add_Edge(pnode headvertex, pnode lastvertex, int weight);
 #endif
