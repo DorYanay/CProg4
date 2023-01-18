@@ -28,4 +28,5 @@ void TSP_cmd(pnode head);
 pnode findVertex(pnode head, int v);
 pnode newGraph(int Vnum);
 void add_Edge(pnode headvertex, pnode lastvertex, int weight);
+pnode init(pnode *head, int numNodes);
 #endif

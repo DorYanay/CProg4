@@ -14,6 +14,7 @@ int main()
         switch (c)
         {
         case 'A':
+            printf("A:\n");
             build_graph_cmd(&head);
             break;
         // case 'B':
@@ -23,17 +24,19 @@ int main()
             delete_node_cmd(&head);
             break;
         // case 'S':
-        //     scanf("%d", &sourceNum);
-        //     scanf("%d", &destNum);
-        //     result = shortsPath_cmd(head, sourceNum, destNum);
-        //     printf("Dijsktra shortest path: %d \n", result);
         //     break;
         case 'P':
+            printf("P:\n");
             printGraph_cmd(head);
             break;
         // case 'T':
         //     TSP_cmd(head);
         //     break;
+        case 'Z':
+            printf("Z:\n");
+            deleteGraph_cmd(&head);
+            printGraph_cmd(head);
+            break;
         default:
             break;
         }

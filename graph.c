@@ -42,6 +42,10 @@ pnode newGraph(int Vnum)
 }
 void printGraph_cmd(pnode head)
 {
+    if (head == NULL)
+    {
+        printf("NO GRAPH\n");
+    }
     pnode temp = head;
     pedge edge1;
     while (temp)
@@ -99,6 +103,7 @@ void delete_node_cmd(pnode *head)
         if (temp->node_num == v)
         {
             vert = temp;
+            break;
         }
         prever = temp;
         temp = temp->next;
