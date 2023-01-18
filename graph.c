@@ -51,6 +51,7 @@ void printGraph_cmd(pnode head)
     while (temp)
     {
         edge1 = temp->edges;
+        printf("Edges of %d:\n", temp->node_num);
         while (edge1)
         {
             printf("V:%d, E:%d W:%d\n", temp->node_num, edge1->endpoint->node_num, edge1->weight);
