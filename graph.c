@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <math.h>
 #include "graph.h"
 
 void add_Edge(pnode headvertex, pnode lastvertex, int weight)
@@ -170,9 +172,43 @@ void delete_node_cmd(pnode *head)
         prever->next = vert->next;
     }
     free(vert);
-    printf("D: \n");
-    printGraph_cmd(*head);
+    // printf("D: \n");
+    // printGraph_cmd(*head);
 }
+int NumofVertices(pnode head)
+{
+    int count = 0;
+    pnode current = head;
+    while (current != NULL)
+    {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+pedge findEdge(pnode head, int v1, int v2)
+{
+    pnode current = head;
+    while (current != NULL)
+    {
+        if (current->node_num == v1)
+        {
+            pedge edge = current->edges;
+            while (edge != NULL)
+            {
+                if (edge->endpoint->node_num == v2)
+                {
+                    return edge;
+                }
+                edge = edge->next;
+            }
+        }
+        current = current->next;
+    }
+    // if there is no edge between v1 and v2
+    return NULL;
+}
+
 void freeCurrentEdges(pnode v)
 {
     pedge vedge = v->edges;
@@ -202,14 +238,13 @@ void insert_node_cmd(pnode *head)
     {
         temp = new_Node(head, v);
     }
-    // int res = scanf("%d", &nextvertex);
     while ((res = scanf("%d", &lastv)) && !feof(stdin))
     {
         nextvertex = findVertex(*head, lastv);
         scanf("%d", &weight);
         add_Edge(temp, nextvertex, weight);
     }
-    printGraph_cmd(*head);
+    // printGraph_cmd(*head);
 }
 // A
 void build_graph_cmd(pnode *head)
@@ -239,5 +274,124 @@ void build_graph_cmd(pnode *head)
         }
         Vnum--;
     }
-    printGraph_cmd(*head);
+    // printGraph_cmd(*head);
+}
+// S
+int shortsPath_cmd(pnode head, int v1, int v2)
+{
+    pnode current = head;
+    pnode start = NULL;
+    pnode end = NULL;
+    // Initialize all distances to infinity
+    while (current)
+    {
+        current->distance = infinity;
+        current->visited = 0;
+        if (current->node_num == v1)
+        {
+            start = current;
+            start->distance = 0;
+        }
+        current = current->next;
+    }
+    end = findVertex(head, v2);
+    current = start;
+    while (current)
+    {
+        current->visited = 1;
+        while (current->edges)
+        {
+            if (current->edges->endpoint->visited == 0 && current->edges->endpoint->distance > current->distance + current->edges->weight)
+            {
+                // relax distance
+                current->edges->endpoint->distance = current->distance + current->edges->weight;
+            }
+            current->edges = current->edges->next;
+        }
+        current = MinVisit(head);
+    }
+    if (end->distance != infinity)
+    {
+        return end->distance;
+    }
+    return -1;
+}
+
+pnode MinVisit(pnode head)
+{
+    int mindistance = __INT_MAX__;
+    pnode minvisit = NULL;
+    while (head)
+    {
+        // checking if vertice has been visited
+        if (head->visited == 0 && head->distance < mindistance)
+        {
+            // updating the new mindistance and head.
+            mindistance = head->distance;
+            minvisit = head;
+        }
+        head = head->next;
+    }
+    return minvisit;
+}
+
+// T
+void swap(int *n, int i, int j)
+{
+    int temp = n[i];
+    n[i] = n[j];
+    n[j] = temp;
+}
+void helper(pnode head, int *arr, int k, int current, int *ans)
+{
+    if (k == 2)
+    {
+        int distance1 = shortsPath_cmd(head, arr[0], arr[1]);
+        if (distance1 != -1)
+        {
+            if ((current + distance1) < *ans)
+            {
+                *ans = (current + distance1);
+            }
+        }
+        return;
+    }
+    for (int i = 1; i < k; i++)
+    {
+        swap(arr, 1, i);
+        int distance2 = shortsPath_cmd(head, arr[0], arr[1]);
+        if (distance2 == -1)
+        {
+            return;
+        }
+        helper(head, arr + 1, k - 1, current + distance2, ans);
+        swap(arr, i, 1);
+    }
+}
+void TSP_cmd(pnode head)
+{
+    // getting input and inserting number to an array
+    int k;
+    scanf("%d", &k);
+    int *arr = (int *)(malloc(sizeof(int) * k));
+    int ans = infinity;
+    for (int i = 0; i < k; i++)
+    {
+        scanf("%d", &arr[i]);
+    }
+
+    // checking every possible vertex to start from
+    for (int i = 0; i < k; i++)
+    {
+        swap(arr, 0, i);
+        helper(head, arr, k, 0, &ans);
+        swap(arr, i, 0);
+    }
+
+    if (ans == infinity)
+    {
+        ans = -1;
+    }
+    free(arr);
+    printf("TSP shortest path: %d \n", ans);
 }
