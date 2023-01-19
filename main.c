@@ -5,10 +5,8 @@
 int main()
 {
     char c = 0;
-    // int result = 0;
-    // int sourceNum = 0;
-    // int destNum = 0;
     pnode head = NULL;
+    int mindistance = 0;
     while (!feof(stdin))
     {
         switch (c)
@@ -24,8 +22,10 @@ int main()
         case 'D':
             delete_node_cmd(&head);
             break;
-        // case 'S':
-        //     break;
+        case 'S':
+            mindistance = shortsPath_cmd(head);
+            printf("Dijsktra shortest path: %d \n", mindistance);
+            break;
         case 'P':
             printf("P:\n");
             printGraph_cmd(head);
