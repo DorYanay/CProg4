@@ -357,15 +357,15 @@ void printArray(int *arr, int k)
     printf("]\n");
 }
 
-void check(pnode head, int *arr, int k, int curr, int *ans)
+void check(pnode head, int *arr, int k, int current, int *ans)
 {
     // if there are only two vertices
     if (k == 2)
     {
         int distance = shortsPath_cmd(head, arr[0], arr[1]);
-        if (distance != -1 && (curr + distance) < *ans)
+        if (distance != -1 && (current + distance) < *ans)
         {
-            *ans = (curr + distance);
+            *ans = (current + distance);
         }
         return;
     }
@@ -379,7 +379,7 @@ void check(pnode head, int *arr, int k, int curr, int *ans)
         {
             return;
         }
-        check(head, arr + 1, k - 1, curr + distance2, ans);
+        check(head, arr + 1, k - 1, current + distance2, ans);
         swap(arr, i, 1);
     }
 }
@@ -404,7 +404,7 @@ void TSP_cmd(pnode head)
         swap(arr, i, 0);
     }
 
-    if (ans == __INT_MAX__)
+    if (ans == infinity)
     {
         ans = -1;
     }
