@@ -279,10 +279,11 @@ void build_graph_cmd(pnode *head)
 // S
 int shortsPath_cmd(pnode head, int v1, int v2)
 {
-    pnode current = head;
     pnode start = NULL;
     pnode end = NULL;
-    // Initialize all distances to infinity
+    pnode current = head;
+
+    // resetting visiting and saving start and end
     while (current)
     {
         current->distance = infinity;
@@ -292,34 +293,37 @@ int shortsPath_cmd(pnode head, int v1, int v2)
             start = current;
             start->distance = 0;
         }
+        else if (current->node_num == v2)
+        {
+            end = current;
+        }
         current = current->next;
     }
-    end = findVertex(head, v2);
+
     current = start;
     while (current)
     {
         current->visited = 1;
-        while (current->edges)
+        pedge currentNE = current->edges;
+        while (currentNE)
         {
-            if (current->edges->endpoint->visited == 0 && current->edges->endpoint->distance > current->distance + current->edges->weight)
+            if (!currentNE->endpoint->visited && current->distance + currentNE->weight < currentNE->endpoint->distance)
             {
-                // relax distance
-                current->edges->endpoint->distance = current->distance + current->edges->weight;
+                currentNE->endpoint->distance = current->distance + currentNE->weight;
             }
-            current->edges = current->edges->next;
+            currentNE = currentNE->next;
         }
         current = MinVisit(head);
     }
-    if (end->distance != infinity)
+    if (end->distance == infinity)
     {
-        return end->distance;
+        end->distance = -1;
     }
-    return -1;
+    return end->distance;
 }
-
 pnode MinVisit(pnode head)
 {
-    int mindistance = __INT_MAX__;
+    int mindistance = infinity;
     pnode minvisit = NULL;
     while (head)
     {
@@ -336,26 +340,37 @@ pnode MinVisit(pnode head)
 }
 
 // T
-void swap(int *n, int i, int j)
+void swap(int *nums, int num1, int num2)
 {
-    int temp = n[i];
-    n[i] = n[j];
-    n[j] = temp;
+    int temp = nums[num1];
+    nums[num1] = nums[num2];
+    nums[num2] = temp;
 }
-void helper(pnode head, int *arr, int k, int current, int *ans)
+
+void printArray(int *arr, int k)
 {
+    printf("[%d", *arr);
+    for (size_t i = 1; i < k; i++)
+    {
+        printf(", %d", *(arr + i));
+    }
+    printf("]\n");
+}
+
+void check(pnode head, int *arr, int k, int curr, int *ans)
+{
+    // if there are only two vertices
     if (k == 2)
     {
-        int distance1 = shortsPath_cmd(head, arr[0], arr[1]);
-        if (distance1 != -1)
+        int distance = shortsPath_cmd(head, arr[0], arr[1]);
+        if (distance != -1 && (curr + distance) < *ans)
         {
-            if ((current + distance1) < *ans)
-            {
-                *ans = (current + distance1);
-            }
+            *ans = (curr + distance);
         }
         return;
     }
+
+    // check other paths recursively
     for (int i = 1; i < k; i++)
     {
         swap(arr, 1, i);
@@ -364,10 +379,11 @@ void helper(pnode head, int *arr, int k, int current, int *ans)
         {
             return;
         }
-        helper(head, arr + 1, k - 1, current + distance2, ans);
+        check(head, arr + 1, k - 1, curr + distance2, ans);
         swap(arr, i, 1);
     }
 }
+
 void TSP_cmd(pnode head)
 {
     // getting input and inserting number to an array
@@ -384,11 +400,11 @@ void TSP_cmd(pnode head)
     for (int i = 0; i < k; i++)
     {
         swap(arr, 0, i);
-        helper(head, arr, k, 0, &ans);
+        check(head, arr, k, 0, &ans);
         swap(arr, i, 0);
     }
 
-    if (ans == infinity)
+    if (ans == __INT_MAX__)
     {
         ans = -1;
     }
