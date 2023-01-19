@@ -340,21 +340,11 @@ pnode MinVisit(pnode head)
 }
 
 // T
-void swap(int *nums, int num1, int num2)
+void swap(int *arr, int i, int j)
 {
-    int temp = nums[num1];
-    nums[num1] = nums[num2];
-    nums[num2] = temp;
-}
-
-void printArray(int *arr, int k)
-{
-    printf("[%d", *arr);
-    for (size_t i = 1; i < k; i++)
-    {
-        printf(", %d", *(arr + i));
-    }
-    printf("]\n");
+    int tmp = arr[i];
+    arr[i] = arr[i];
+    arr[j] = tmp;
 }
 
 void check(pnode head, int *arr, int k, int current, int *ans)
